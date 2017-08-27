@@ -6,6 +6,18 @@ import (
 	"unsafe"
 )
 
+type user struct {
+	name  string
+	email string
+}
+
+func (u user) changeEmail(email string) {
+	u.email = email
+}
+func (u *user) ChangeEmail(email string) {
+	u.email = email
+}
+
 type slice []int
 type sli []*int
 type HEAD map[string][]string
@@ -33,6 +45,7 @@ func (h HEAD) Add(key, value string) {
 
 func main() {
 	var w, r int32 = 2, 2
+	user := user{"Jalo", "jalo.mu@sina.com"}
 	fmt.Println(w, r, unsafe.Sizeof(w), unsafe.Sizeof(r))
 	var i slice
 	fmt.Println(i)
@@ -83,7 +96,7 @@ func main() {
 		fmt.Println("v 占用空间大小：", unsafe.Sizeof(v))
 	}
 	var h HEAD = make(map[string][]string, 1)
-	fmt.Printf("%p, %v\n", h, h)
+	fmt.Printf("%p, %v, \nh变量的空间大小%d\n", h, h, unsafe.Sizeof(h))
 	h.Add("1", "A")
 	h.Add("2", "A")
 	h.Add("3", "A")
@@ -105,7 +118,12 @@ func main() {
 	h.Add("3", "A")
 	h.Add("3", "A")
 	h.Add("3", "A")
-	fmt.Printf("%p, %v\n", h, h)
+	fmt.Printf("%p, %v, \nh变量的空间大小%d\n", h, h, unsafe.Sizeof(h))
+	fmt.Println("没有改变前: ", user)
+	user.changeEmail("Jalo_mu@sina.com")
+	fmt.Println("值类型改变后：", user)
+	user.ChangeEmail("Jalo_mu@sina.com")
+	fmt.Println("指针类型改变后：", user)
 }
 
 func is_type(value interface{}) {
